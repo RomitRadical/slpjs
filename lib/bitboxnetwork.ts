@@ -119,7 +119,7 @@ export class BitboxNetwork implements INetwork {
     // (Warning: Sweeps all BCH/SLP UTXOs for the funding address)
     public async simpleTokenSend(
         tokenId: string, sendAmounts: BigNumber|BigNumber[], inputUtxos: SlpAddressUtxoResult[],
-        tokenReceiverAddresses: string|string[], changeReceiverAddress: string, requiredNonTokenOutputs
+        tokenReceiverAddresses: string|string[], changeReceiverAddress: string, getTxHex: boolean, requiredNonTokenOutputs
         : Array<{ satoshis: number, receiverAddress: string }> = []) {
         const txHex = this.txnHelpers.simpleTokenSend({
             tokenId, sendAmounts, inputUtxos, tokenReceiverAddresses,
@@ -130,6 +130,10 @@ export class BitboxNetwork implements INetwork {
             throw Error("The BitboxNetwork version of this method requires a private key WIF be provided with each input." +
                         "If you want more control over the signing process use Slp.simpleTokenSend() to get the unsigned transaction," +
                         "then after the transaction is signed you can use BitboxNetwork.sendTx()");
+        }
+            
+        if(getTxHex){
+            return getTxHex;    
         }
 
         return await this.sendTx(txHex);
